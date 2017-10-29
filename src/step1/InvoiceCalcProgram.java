@@ -1,4 +1,5 @@
-package ex21;
+package step1;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -9,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class InvoiceCalcProgram {
-
 	public static void main(String[] args) {
 		// 通話記録ファイルを読み込み
 		try {
@@ -25,7 +25,6 @@ public class InvoiceCalcProgram {
 			// 請求ファイルを
 			File file2 = new File(pass2);
 
-
 			// 通話記録ファイルから1列ずつ文字列を読み込み
 			BufferedReader bufferedReader = new BufferedReader(new FileReader(file1));
 			PrintWriter bufferedWriter = new PrintWriter(new BufferedWriter(new FileWriter(file2)));
@@ -39,13 +38,12 @@ public class InvoiceCalcProgram {
 			String src_tel_num = null;
 
 			// 通話記録
-			//String call_date;
+			// String call_date;
 
 			SimpleDateFormat sdFormat = new SimpleDateFormat("hh:mm");
 			Date start_time = sdFormat.parse("08:00");
 			Date end_time = sdFormat.parse("17:59");
 			Date call_time;
-
 
 			int call_duration;
 			String dst_tel_num;
@@ -59,9 +57,8 @@ public class InvoiceCalcProgram {
 			// 通話料金（合計）
 			int call_charge_total = 0;
 
-
 			// 通話記録ファイルのすべての行を読み込むまで繰り返し実行
-			while((line = bufferedReader.readLine()) != null) {
+			while ((line = bufferedReader.readLine()) != null) {
 				// 通話料金：20円/分
 				int call_charge = 20;
 
@@ -71,45 +68,44 @@ public class InvoiceCalcProgram {
 				char init_char = line.charAt(0);
 				// 一桁目の文字で処理を分岐
 				// 1桁目が1の場合は契約者の電話番号を取得
-				switch(init_char) {
+				switch (init_char) {
 				case '1':
 					src_tel_num = list[1];
 					break;
 				// 1桁目が2の場合は加入サービス情報を取得
 				case '2':
 					// 家族割の場合
-					if(list[1].charAt(0) == 'C') {
-						if (count1 == 0 ) {
+					if (list[1].charAt(0) == 'C') {
+						if (count1 == 0) {
 							base_charge += 100;
 							family_tel_num1 = list[2];
 							count1 += 1;
-						}else if(count1 == 1) {
+						} else if (count1 == 1) {
 							family_tel_num2 = list[2];
 						}
 					}
 					// 昼トク割引
-					if(list[1].charAt(0) == 'E') {
+					if (list[1].charAt(0) == 'E') {
 						base_charge += 200;
 					}
 					break;
 				case '5':
-					//call_date = list[1];
+					// call_date = list[1];
 					call_time = sdFormat.parse(list[2]);
 					System.out.println(call_time);
 					call_duration = Integer.parseInt(list[3]);
 					dst_tel_num = list[4];
 					// 通話料金を計算
 					// 家族割引と昼特割引両方に加入している場合
-					if(base_charge == 1300) {
-						if(start_time.compareTo(call_time) < 0 && 0 < end_time.compareTo(call_time)){
+					if (base_charge == 1300) {
+						if (start_time.compareTo(call_time) < 0 && 0 < end_time.compareTo(call_time)) {
 							call_charge = call_charge - 5;
 							System.out.println(call_charge);
 						}
-						if(dst_tel_num.equals(family_tel_num1)){
+						if (dst_tel_num.equals(family_tel_num1)) {
 							call_charge = call_charge / 2;
 							System.out.println(call_charge);
-						}
-						else if(dst_tel_num.equals(family_tel_num2)){
+						} else if (dst_tel_num.equals(family_tel_num2)) {
 							call_charge = call_charge / 2;
 							System.out.println(call_charge);
 
@@ -117,24 +113,23 @@ public class InvoiceCalcProgram {
 						call_charge_total += call_charge * call_duration;
 					}
 					// 昼特割引のみに加入している場合
-					else if(base_charge == 1200){
-						if(start_time.compareTo(call_time) < 0 && 0 < end_time.compareTo(call_time)){
-							call_charge = call_charge -5;
+					else if (base_charge == 1200) {
+						if (start_time.compareTo(call_time) < 0 && 0 < end_time.compareTo(call_time)) {
+							call_charge = call_charge - 5;
 						}
 						call_charge_total += call_charge * call_duration;
 					}
 					// 家族割引のみに加入している場合
-					else if(base_charge == 1100){
-						if(dst_tel_num.equals(family_tel_num1)){
+					else if (base_charge == 1100) {
+						if (dst_tel_num.equals(family_tel_num1)) {
 							call_charge = call_charge / 2;
-						}
-						else if(dst_tel_num.equals(family_tel_num2)){
+						} else if (dst_tel_num.equals(family_tel_num2)) {
 							call_charge = call_charge / 2;
 						}
 						call_charge_total += call_charge * call_duration;
 					}
 					// 家族割引と昼特割引両方に加入していない場合
-					else if(base_charge == 1000){
+					else if (base_charge == 1000) {
 						call_charge_total += call_charge * call_duration;
 					}
 					break;
@@ -156,7 +151,7 @@ public class InvoiceCalcProgram {
 					System.out.println("9 " + "====================");
 					bufferedWriter.println("9 " + "====================");
 
-					//各変数を初期化
+					// 各変数を初期化
 
 					count1 = 0;
 					base_charge = 1000;
@@ -171,5 +166,4 @@ public class InvoiceCalcProgram {
 			e.printStackTrace();
 		}
 	}
-
 }
