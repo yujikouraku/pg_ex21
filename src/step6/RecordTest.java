@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class Record_Test {
+public class RecordTest {
 
 	@Test
 	public void getRecordCodeTest1() {
