@@ -5,9 +5,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 public class InvoiceWriter {
-	private StringWriter output;
 	private PrintWriter writer;
-	private String output_str;
 
 	public InvoiceWriter(StringWriter output) {
 		 this.writer = new PrintWriter(new BufferedWriter(output));

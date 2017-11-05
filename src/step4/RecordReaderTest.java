@@ -9,7 +9,7 @@ import org.junit.Test;
 public class RecordReaderTest {
 
 	@Test
-	public void RecordReaderTest1() {
+	public void testRecordReader1() {
 
 		try {
 			RecordReader recordreader = new RecordReader();

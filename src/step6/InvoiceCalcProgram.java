@@ -1,12 +1,6 @@
 package step6;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 
 public class InvoiceCalcProgram {
@@ -14,17 +8,8 @@ public class InvoiceCalcProgram {
 	public static void main(String[] args) {
 		// 通話記録ファイルを読み込み
 		try {
-			// 通話記録ファイルの配置先パスを指定
-			String pass1 = "src/resource/record.log";
-
-			// 通話記録ファイルを開く
-			File file1 = new File(pass1);
-
-			// 通話記録ファイルから1列ずつ文字列を読み込み
-			BufferedReader reader = new BufferedReader(new FileReader(file1));
-
 			// RecordReader インスタンス生成
-			RecordReader recordReader = new RecordReader(reader);
+			RecordReader recordreader = new RecordReader();
 
 			// 契約者情報
 			String owner_tel_num = null;
@@ -41,8 +26,7 @@ public class InvoiceCalcProgram {
 			// Invoiceインスタンス生成
 			Invoice invoice = new Invoice();
 
-
-			for (Record record = recordReader.read(); record != null; record = recordReader.read()) {
+			for (Record record = recordreader.read(); record != null; record = recordreader.read()) {
 				// 読み込んだ文字列の一桁目の文字を取得
 				char init_char = record.getRecordCode();
 				// 一桁目の文字で処理を分岐
@@ -65,7 +49,9 @@ public class InvoiceCalcProgram {
 				// 1桁目が9の場合は請求ファイルに契約者の請求金額を出力
 				case '9':
 					// 請求ファイルに契約者情報を書き込み
-					addInvoiceFile(invoice);
+					InvoiceWriter writer = new InvoiceWriter(new StringWriter());
+					writer.write(invoice);
+					writer.close();
 
 					// 各変数を初期化
 					invoice.clear();
@@ -88,7 +74,8 @@ public class InvoiceCalcProgram {
 					}
 				}
 			// 最後にファイルを閉じてリソースを開放する
-			reader.close();
+
+			recordreader.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -130,45 +117,6 @@ public class InvoiceCalcProgram {
 			call_charge = call_charge_unit * call_duration;
 		}
 		return call_charge;
-	}
-
-	private static void addInvoiceFile(Invoice invoice) {
-		// 請求ファイルの配置先パスを指定
-		String pass2 = "src/resource/invoice.dat";
-
-		// 請求ファイルを開く
-		File file2 = new File(pass2);
-
-		PrintWriter bufferedWriter;
-		try {
-
-			bufferedWriter = new PrintWriter(new BufferedWriter(new FileWriter(file2)));
-
-			String owner_tel_num = invoice.getOwnerTelNumber();
-			int basic_charge = invoice.getBasicCharge();
-			int call_charge = invoice.getCallCharge();
-
-			// 請求ファイルに契約者情報を書き込み
-			bufferedWriter.println("1 " + owner_tel_num);
-			System.out.println("1 " + owner_tel_num);
-
-			// 請求ファイルに基本料金を書き込み
-			bufferedWriter.println("5 " + basic_charge);
-			System.out.println("5 " + basic_charge);
-
-			// 請求ファイルに通話料金を書き込み
-			bufferedWriter.println("7 " + call_charge);
-			System.out.println("7 " + call_charge);
-
-			// 請求ファイルに区切り文字を書き込み
-			bufferedWriter.println("9 " + "====================");
-			System.out.println("9 " + "====================");
-
-			bufferedWriter.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private static int calcBaseCharge(Record record, int basic_charge) {
