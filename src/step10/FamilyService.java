@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class FamilyService implements Service{
 	private boolean familyserviceflag = false;
-	private boolean familynumberflag = false;
 	// 加入サービス情報
 	private ArrayList<String> family_tel_num_array = new ArrayList<String>();
 
@@ -25,14 +24,8 @@ public class FamilyService implements Service{
 	}
 
 	public boolean isFamilyTelNumber(String dst_tel_num) {
-		if (this.isJoined() == true) {
-			if (family_tel_num_array.contains(dst_tel_num)) {
-				familynumberflag = true;
-			} else {
-				familynumberflag = false;
-			}
-		}
-		return familynumberflag;
+		if (!this.isJoined()) return false;
+		return family_tel_num_array.contains(dst_tel_num);
 	}
 
 	@Override
@@ -56,7 +49,6 @@ public class FamilyService implements Service{
 	@Override
 	public void clear() {
 		familyserviceflag = false;
-		familynumberflag = false;
 	}
 
 }

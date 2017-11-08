@@ -3,37 +3,45 @@ package step10;
 public class ServiceCollection implements Service {
 	private int fs_count = 0;
 
+	// Serviceインスタンス生成
+	Service[] services = {new DayService(), new FamilyService()};
+
+	/*
 	// DayServiceインスタンス生成
 	DayService dayService = new DayService();
 
 	// FamilyServiceインスタンス生成
 	FamilyService familyService = new FamilyService();
+	*/
 
 	@Override
 	public void clear() {
-		dayService.clear();
-		familyService.clear();
+		for (int i = 0; i < services.length; i++) {
+			services[i].clear();
+		}
 		fs_count = 0;
 	}
 
 	@Override
 	public void checkService(Record record) {
-		dayService.checkService(record);
-		familyService.checkService(record);
+		for (int i = 0; i < services.length; i++) {
+			services[i].checkService(record);
+		}
 	}
 
 	@Override
 	public int calcUnitPrice(Record record, int unitPrice) {
-		unitPrice = dayService.calcUnitPrice(record, unitPrice);
-		unitPrice = familyService.calcUnitPrice(record, unitPrice);
+		for (int i = 0; i < services.length; i++) {
+			unitPrice = services[i].calcUnitPrice(record, unitPrice);
+		}
 		return unitPrice;
 	}
 
 	@Override
 	public int calcBasicCharge(int basicCharge) {
-		basicCharge = dayService.calcBasicCharge(basicCharge);
+		basicCharge = services[0].calcBasicCharge(basicCharge);
 		if (fs_count == 0) {
-			basicCharge = familyService.calcBasicCharge(basicCharge);
+			basicCharge = services[1].calcBasicCharge(basicCharge);
 			fs_count += 1;
 		}
 		return basicCharge;
